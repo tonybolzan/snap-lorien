@@ -1,0 +1,67 @@
+base: core20
+name: lorien
+title: Lorien
+version: 0.5.0
+summary: Lorien Canvas
+description: |
+  Lorien is an infinite canvas drawing/note-taking app that is focused on performance,
+  small savefiles and simplicity.
+type: app
+grade: stable
+confinement: strict
+license: MIT
+icon: lorien.svg
+architectures:
+  - build-on: amd64
+
+apps:
+  lorien:
+    command: Lorien.x86_64
+    desktop: lorien.desktop
+    plugs:
+      - home
+      - opengl
+      - network
+      - x11
+      - wayland
+      - audio-playback
+    environment:
+      XLOCALEDIR: '$SNAP/usr/share/X11/locale'
+      LOCPATH: '$SNAP/usr/lib/locale'
+      XDG_CONFIG_HOME: '$HOME/.config'
+      XKB_CONFIG_ROOT: '$SNAP/usr/share/X11/xkb'
+      XDG_CONFIG_DIRS: '$SNAP/etc/xdg:$XDG_CONFIG_DIRS'
+      XDG_DATA_HOME: '$HOME/.local/share'
+
+parts:
+  config:
+    plugin: nil
+    build-packages:
+      - curl
+      - jq
+      - xz-utils
+    override-prime: |
+      DOWNLOAD_URL=$(curl -sS "https://api.github.com/repos/mbrlabs/Lorien/releases/latest" | jq -r '.assets[] | select(.name | ascii_downcase | contains("linux")) | .browser_download_url')
+      curl -sSL "$DOWNLOAD_URL" | tar -xJ --strip-components=1
+
+  copy:
+    after: [ config ]
+    plugin: dump
+    source: .
+    stage:
+      - lorien.svg
+      - lorien.desktop
+    prime:
+      - lorien.svg
+      - lorien.desktop
+
+  install:
+    after: [ copy ]
+    plugin: nil
+    stage-packages:
+      - libc-bin
+      - libgl1
+      - libxi6
+      - libxrandr2
+      - libxinerama1
+      - libxcursor1

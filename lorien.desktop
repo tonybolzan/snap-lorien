@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Lorien
+GenericName=Virtual whiteboard
+Comment=Vector drawing app with infinite canvas
+Icon=lorien.svg
+TryExec=Lorien.x86_64
+Exec=Lorien.x86_64 %F
+Terminal=false
+Categories=Graphics;2DGraphics;VectorGraphics;Office;Education;
+Keywords=whiteboard;drawing;vector;notebook;godot;svg;tablet;wacom;
+StartupWMClass=Lorien
